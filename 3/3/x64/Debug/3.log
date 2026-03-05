@@ -1,0 +1,7 @@
+﻿  FileName.cpp
+S:\csszaa\3\3\FileName.cpp(6,15): error C2371: 'a': redefinition; different basic types
+      S:\csszaa\3\3\FileName.cpp(5,6):
+      see declaration of 'a'
+  
+S:\csszaa\3\3\FileName.cpp(8,2): error C4235: nonstandard extension used: '__asm' keyword not supported on this architecture
+S:\csszaa\3\3\FileName.cpp(18,1): error C1071: unexpected end of file found in comment
