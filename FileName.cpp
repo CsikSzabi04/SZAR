@@ -90,8 +90,8 @@ int main() {
 		mov ebx, 10;
 		imul ebx;
 		mov ebx, 100;
-		idiv eax;
-		mov c, eax;
+		idiv ebx;
+		mov eax, c;
 	}
 
 	//10.)
