@@ -1,111 +1,93 @@
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 int main() {
+	srand(time(NULL));
+	int t[10];
+	int min, max;
 
-	//1.)
-	int a, b, c;
-
-	_asm{
-		add a, eax;
-	}
-
-	//2.)
-	int b, c;
+	const char* fmtMin = "Adja meg a min erteket: ";
+	const char* fmtMax = "Adja meg a max erteket: ";
+	const char* fmtIntRead = "%d";
 	_asm {
-		//1 megoldas
-		mov eax, b;
-		mov ebx, c;
-		mov b, ebx;
-		mov c, eax;
+		CIKLUS_DO:
+			mov esi, esp;
 
-		//2 megoldas
-		mov ebx, b;
-		mov ecx, c;
-		mov b, ecx;
-		mov c, ebx;
+			//printf("Adja meg a min erteket: ");
+			//scanf_s("%d", &min);
+			push fmtMin;
+			call dword ptr printf;
+
+			lea eax, min;  //&min értékét tárolja az eax-ben
+			push eax;
+			push fmtIntRead;
+			call dword ptr scanf;
+
+			//printf("Adja meg a max erteket: ");
+			//scanf_s("%d", &max);
+			push fmtMax;
+			call dword ptr printf;
+
+			lea eax, max;  //&max értékét tárolja az eax-ben
+			push eax;
+			push fmtIntRead;
+			call dword ptr scanf;
+
+			mov esp, esi;
+
+			//Do-nak While része //while(max <=min || min < 10 || min > 1000 || max < 10 || max > 1000);
+			mov eax, max;
+			cmp eax, min;
+			jle CIKLUS_DO;
+			cmp min, 1;
+			jl CIKLUS_DO;
+			cmp min, 1000;
+			jg CIKLUS_DO;
+			cmp max, 1;
+			jl CIKLUS_DO;
+			cmp max, 1000;
+			jg CIKLUS_DO;
 	}
 
-	//3.)
-	int x, y;
-
-	x = x + y;
-	y = x - y;
-	x = x - y;
-
+	//for (int i = 10; i > 0; i--) t[10-i] = rand() % (max - min + 1) + min;
 	_asm {
-		mov eax, x;
-		add eax, y;
-		mov x, eax;
+		mov ecx, 10;       // int i = 10;
+		mov edi, 0;
+		CIKLUS_PUSH:
+			rdrand eax;    //random számot generál
+			mov ebx, max;  //ebx = max;
+			sub ebx, min;  // (max - min)
+			inc ebx;       // (max-min+1)
+			mov edx, 0;
+			idiv ebx;      // edx = %(max-min+1);
+			add edx, min;  // edx + min
 
-		sub eax, y;
-		mov y, eax;
+			mov t[edi], edx;
+			add edi, 4;
 
-		sub eax, y;
-		mov x, eax;
+		loop CIKLUS_PUSH;
 	}
 
-	//4.)
-	int d, e;
-
-	d = d / e;
+	//for (int i = 10; i > 0; i--) printf("%d\t", t[10 - i]);
+	const char* fmtIntPrint = "%d\t";
 	_asm {
-		mov d, 120;
-		mov e, 58;
-		
-		mov eax, d;
-		mov edx, e;
+		mov ecx, 10;       // int i = 10;
+		mov edi, 0;
+		CIKLUS_PRINT:
+			push ecx;
+			mov esi, esp;
 
-		div d, e;
+			push t[edi];
+			push fmtIntPrint;
+			call dword ptr printf;
+
+			add edi, 4;
+
+			mov esp, esi;
+			pop ecx;
+		loop CIKLUS_PRINT;
 	}
-	
-	//5.)
-	int f, h;
-	_asm {
-		sub EDI, EDI;
-		and EDI, 0;
-		xor EDI, EDI;
-		shr EDI, 0;
-	}
-
-	//7.)
-	_asm {
-		sar edx, 19;
-	}
-
-	//8.)
-	_asm {
-		mov al, 255;
-		mov ah, 100;
-		mul ah;
-
-		mov n, ax;
-	}
-
-	//9.)
-	int a, b, c;
-
-	_asm{
-		mov eax, a;
-		add eax, b;
-		mov ebx, 10;
-		imul ebx;
-		mov ebx, 100;
-		idiv ebx;
-		mov eax, c;
-	}
-
-	//10.)
-	int a, b, c, C;
-
-	_asm {
-		mov eax, c;
-		not eax;
-		and eax, b;
-		or eax, a;
-		xor eax, c;
-		mov eax, C;
-	}
-	
 
 	return 0;
 }
